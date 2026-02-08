@@ -3,7 +3,7 @@
 # from the PySpark module.
 import sys
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import count
+from pyspark.sql.functions import count, sum
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: mnmcount <file>", file=sys.stderr)
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     count_mnm_df = (mnm_df
         .select("State", "Color", "Count")
         .groupBy("State", "Color")
-        .agg(count("Count").alias("Total"))
+        .agg(sum("Count").alias("Total"))
         .orderBy("Total", ascending=False))
     # Show the resulting aggregations for all the states and colors;
     # a total count of each color per state.
@@ -57,7 +57,7 @@ if __name__ == "__main__":
         .select("State", "Color", "Count")
         .where(mnm_df.State == "CA")
         .groupBy("State", "Color")
-        .agg(count("Count").alias("Total"))
+        .agg(sum("Count").alias("Total"))
         .orderBy("Total", ascending=False))
     # Show the resulting aggregation for California.
     # As above, show() is an action that will trigger the execution of the
